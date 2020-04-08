@@ -1,0 +1,7 @@
+*/target/
+*/bin/
+.project
+*/.settings/*
+*/.project
+*/.metadata
+*/metadata/*
