@@ -1,7 +1,7 @@
-*/target/
-*/bin/
-.project
-*/.settings/*
-*/.project
 */.metadata
-*/metadata/*
+*/.project
+*/.settings/*
+*/bin/
+*/target/
+.metadata/
+.project
