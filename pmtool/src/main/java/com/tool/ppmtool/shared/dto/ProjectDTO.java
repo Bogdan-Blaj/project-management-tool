@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.tool.ppmtool.domain.Backlog;
 
 
 public class ProjectDTO implements Serializable{
@@ -28,6 +29,18 @@ public class ProjectDTO implements Serializable{
 
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	private Date updated_At;
+	
+	private Backlog backlog;
+	
+	
+
+	public Backlog getBacklog() {
+		return backlog;
+	}
+
+	public void setBacklog(Backlog backlog) {
+		this.backlog = backlog;
+	}
 
 	public Long getId() {
 		return id;

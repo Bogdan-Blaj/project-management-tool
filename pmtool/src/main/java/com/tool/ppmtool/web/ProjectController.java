@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +36,9 @@ import com.tool.ppmtool.service.ProjectService;
 
 @RestController
 @RequestMapping("/api/project")
+@CrossOrigin
 public class ProjectController {
+	
 	
 	@Autowired
 	private ProjectService projectService;
@@ -43,27 +46,10 @@ public class ProjectController {
 	@Autowired
 	private ValidationService validationService;
 	
-//	@PostMapping
-//	public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result){
-//		
-//		ResponseEntity<?> errorMap = validationService.checkValid(result);
-//		if(errorMap != null) 
-//				return errorMap;
-//		
-//		ProjectDTO projectDTO = new ProjectDTO();
-//		ProjectDTO createdProject = new ProjectDTO();
-//		
-//		BeanUtils.copyProperties(project, projectDTO);
-//		
-//		Project returnValue = projectService.saveOrUpdateProject(project);
-//		
-//		return new ResponseEntity<Project>(returnValue, HttpStatus.CREATED);
-//	}
-	
 	
 	
 	@PostMapping
-	public ResponseEntity<?> createNewProject2(@Valid @RequestBody ProjectRequest project, BindingResult result){
+	public ResponseEntity<?> createNewProject(@Valid @RequestBody ProjectRequest project, BindingResult result){
 		
 		ResponseEntity<?> errorMap = validationService.checkValid(result);
 		if(errorMap != null) 
@@ -76,7 +62,11 @@ public class ProjectController {
 		
 		createdProject = projectService.saveOrUpdateProject(projectDTO);
 		
-		return new ResponseEntity<ProjectDTO>(createdProject, HttpStatus.CREATED);
+		ProjectResponse returnValue = new ProjectResponse();
+		
+		BeanUtils.copyProperties(createdProject, returnValue);
+		
+		return new ResponseEntity<ProjectResponse>(returnValue, HttpStatus.CREATED);
 	}
 	
 	
@@ -92,7 +82,7 @@ public class ProjectController {
 		return new ResponseEntity<ProjectResponse>(returnValue, HttpStatus.OK);
 	}
 	
-	@GetMapping
+	@GetMapping("/all")
 	public Iterable<ProjectResponse> getAllProjects(){
 		List<ProjectDTO> storedProjects = projectService.findAllProjects();
 		List<ProjectResponse> returnValue = new ArrayList<>();
@@ -110,22 +100,10 @@ public class ProjectController {
 		return new ResponseEntity<String>("Project with ID: '" + projectId + "' was deleted", HttpStatus.OK);
 	}
 	
-//	@PutMapping
-//	public ResponseEntity<?> updateProject(@Valid @RequestBody Project project, BindingResult result){
-//		
-//		ResponseEntity<?> errorMap = validationService.checkValid(result);
-//		if(errorMap != null) 
-//				return errorMap;
-//		
-//		
-//		Project returnValue = projectService.updateProject(project);
-//		
-//		return new ResponseEntity<Project>(returnValue, HttpStatus.CREATED);
-//	}
 	
 	
 	@PutMapping
-	public ResponseEntity<?> updateProject2(@Valid @RequestBody ProjectRequest project, BindingResult result){
+	public ResponseEntity<?> updateProject(@Valid @RequestBody ProjectRequest project, BindingResult result){
 		
 		ResponseEntity<?> errorMap = validationService.checkValid(result);
 		if(errorMap != null) 

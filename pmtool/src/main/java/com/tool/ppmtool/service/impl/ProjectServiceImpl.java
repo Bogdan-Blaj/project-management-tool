@@ -12,8 +12,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tool.ppmtool.domain.Backlog;
 import com.tool.ppmtool.domain.Project;
-import com.tool.ppmtool.exception.ProjectIdException;
+import com.tool.ppmtool.exception.project.ProjectIdException;
 import com.tool.ppmtool.model.response.ProjectResponse;
 import com.tool.ppmtool.repository.ProjectRepository;
 import com.tool.ppmtool.service.ProjectService;
@@ -25,21 +26,6 @@ public class ProjectServiceImpl implements ProjectService {
 	@Autowired
 	private ProjectRepository projectRepository;
 
-	@Override
-	public Project saveOrUpdateProject(Project project) {
-		
-		//future update, getByProjectIdentifier, if != null throw exception then save
-		try {
-			
-			project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
-			return projectRepository.save(project);
-			
-		}
-		catch (Exception e) {
-			throw new ProjectIdException("Project ID '" + project.getProjectIdentifier().toUpperCase() + "' already exists");
-		}
-		
-	}
 
 	@Override
 	public ProjectDTO findProjectByIdentifier(String projectId) {
@@ -79,22 +65,9 @@ public class ProjectServiceImpl implements ProjectService {
 		projectRepository.deleteById(project.getId());
 	}
 
-	@Override
-	public Project updateProject(Project project) {
-		Project projectEntity = projectRepository.findByProjectIdentifier(project.getProjectIdentifier().toUpperCase());
-		
-		if (projectEntity == null)
-			throw new ProjectIdException("No project with ID '" + project.getProjectIdentifier().toUpperCase() + "'");
-		
-		projectEntity.setDescription(project.getDescription());
-		projectEntity.setProjectName(project.getProjectName());
-		Project returnValue = projectRepository.save(projectEntity);
-		return returnValue;
-	}
 
 	@Override
 	public ProjectDTO saveOrUpdateProject(ProjectDTO projectDTO) {
-		//future update, getByProjectIdentifier, if != null throw exception then save
 		Project project = new Project();
 		Project storedProjectDetails = new Project();
 		BeanUtils.copyProperties(projectDTO, project);
@@ -103,6 +76,14 @@ public class ProjectServiceImpl implements ProjectService {
 		storedProjectDetails = projectRepository.findByProjectIdentifier(project.getProjectIdentifier());
 		if(storedProjectDetails != null)
 			throw new ProjectIdException("Project ID '" + project.getProjectIdentifier().toUpperCase() + "' already exists");
+		
+		{
+			Backlog backlog = new Backlog();
+			project.setBacklog(backlog);
+			backlog.setProject(project);
+			backlog.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+		}
+		
 		
 		storedProjectDetails = projectRepository.save(project);
 		

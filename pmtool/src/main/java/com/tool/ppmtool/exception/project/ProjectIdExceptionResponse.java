@@ -1,4 +1,4 @@
-package com.tool.ppmtool.exception;
+package com.tool.ppmtool.exception.project;
 
 public class ProjectIdExceptionResponse {
 	private String projectIdentifier;

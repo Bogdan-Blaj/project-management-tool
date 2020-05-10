@@ -8,6 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.tool.ppmtool.exception.backlog.BacklogIdentifierException;
+import com.tool.ppmtool.exception.backlog.BacklogIdentifierExceptionResponse;
+import com.tool.ppmtool.exception.project.ProjectIdException;
+import com.tool.ppmtool.exception.project.ProjectIdExceptionResponse;
+
 @ControllerAdvice
 @RestController
 public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler{
@@ -16,6 +21,14 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 	public final ResponseEntity<Object> handleProjectIdException(ProjectIdException ex, WebRequest request){
 		
 		ProjectIdExceptionResponse exceptionResponse = new ProjectIdExceptionResponse(ex.getMessage());
+		
+		return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler
+	public final ResponseEntity<Object> handleBacklogIdentifierException(BacklogIdentifierException ex, WebRequest request){
+		
+		BacklogIdentifierExceptionResponse exceptionResponse = new BacklogIdentifierExceptionResponse(ex.getMessage());
 		
 		return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
 	}
