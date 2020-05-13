@@ -3,7 +3,8 @@ import axios from "axios";
 
  export const updateProject = (project, history) => async dispatch => {
   try {
-    const res = await axios.put("/api/project", project);
+
+    await axios.put("/api/project", project);
     history.push("/dashboard");
     dispatch({
 
@@ -11,6 +12,7 @@ import axios from "axios";
       payload: {}
     })
   } catch (err) {
+
     dispatch({
       type: GET_ERRORS,
       payload: err.response.data
@@ -20,7 +22,7 @@ import axios from "axios";
 
  export const createProject = (project, history) => async dispatch => {
    try {
-     const res = await axios.post("/api/project", project);
+     await axios.post("/api/project", project);
      history.push("/dashboard");
    } catch (err) {
      dispatch({
@@ -41,6 +43,7 @@ import axios from "axios";
 //id is from the link
  export const getProject = (id, history) => async dispatch => {
     try {
+
       const res = await axios.get(`/api/project/${id}`);
     dispatch({
       type : GET_PROJECT,

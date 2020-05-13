@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getProject, createProject, updateProject } from "../../actions/projectActions";
+import { getProject,  updateProject } from "../../actions/projectActions";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
@@ -50,6 +50,7 @@ componentWillReceiveProps(nextProps){
     componentDidMount(){
         const { id } = this.props.match.params;
         this.props.getProject(id, this.props.history);
+
     }
 /*
     How we get the ID?
@@ -61,6 +62,7 @@ componentWillReceiveProps(nextProps){
 
     onChange(e){
         this.setState({[e.target.name] : e.target.value})
+
     }
 
     onSubmit(e){
