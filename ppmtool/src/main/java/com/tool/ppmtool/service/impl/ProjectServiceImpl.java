@@ -107,6 +107,8 @@ public class ProjectServiceImpl implements ProjectService {
 		
 		projectEntity.setDescription(newProject.getDescription());
 		projectEntity.setProjectName(newProject.getProjectName());
+		projectEntity.setEnd_date(newProject.getEnd_date());
+		projectEntity.setStart_date(newProject.getStart_date());
 		Project updatedProject = projectRepository.save(projectEntity);
 		ProjectDTO returnValue = new ProjectDTO();
 		BeanUtils.copyProperties(updatedProject, returnValue);

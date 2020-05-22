@@ -53,7 +53,7 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
 		projectTask.setProjectIdentifier(projectIdentifier);
 
 		// set initial priority
-		if (projectTask.getPriority() == null) {
+		if (projectTask.getPriority() == null || projectTask.getPriority() == 0) {
 			projectTask.setPriority(3);
 		}
 
@@ -105,9 +105,19 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
 		// check that the task exists
 		ProjectTask savedProjectTask = findPTByProjectSequence(backlog_id,projectSequence);
 		
-		savedProjectTask.setPriority(projectTask.getPriority());
+		// if valid priority is received, change it
+		if (projectTask.getPriority() != null && projectTask.getPriority() != 0) {
+			savedProjectTask.setPriority(projectTask.getPriority());
+		}
+		
+		// if valid due date is received, change it
+		if (projectTask.getDueDate() != null ) {
+			savedProjectTask.setDueDate(projectTask.getDueDate());
+		}
 		savedProjectTask.setStatus(projectTask.getStatus());
 		savedProjectTask.setSummary(projectTask.getSummary());
+		savedProjectTask.setAcceptanceCriteria(projectTask.getAcceptanceCriteria());
+		savedProjectTask.setName(projectTask.getName());
 		
 		projectTaskRepository.save(savedProjectTask);
 		return savedProjectTask;

@@ -16,6 +16,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -24,6 +25,9 @@ public class ProjectTask {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@NotBlank(message = "Please include a name")
+	private String name;
 	
 	@Column(updatable = false, unique = true)
 	private String projectSequence;
@@ -37,8 +41,10 @@ public class ProjectTask {
 	
 	private Integer priority;
 	
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dueDate;
-	
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date create_At;
 	
 	private Date update_At;
@@ -64,6 +70,14 @@ public class ProjectTask {
 	
 	
 	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public Long getId() {
 		return id;
 	}
