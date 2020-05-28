@@ -7,13 +7,13 @@ import com.tool.ppmtool.shared.dto.ProjectDTO;
 
 public interface ProjectService {
 
-	ProjectDTO saveOrUpdateProject(ProjectDTO projectDTO);
+	ProjectDTO saveOrUpdateProject(ProjectDTO projectDTO, String username);
 	
-	ProjectDTO findProjectByIdentifier(String projectId);
+	ProjectDTO findProjectByIdentifier(String projectId, String username);
 	
-	List<ProjectDTO> findAllProjects();
+	List<ProjectDTO> findAllProjects(String principal);
 	
-	void deleteProjectByIdentifier(String projectId);
+	void deleteProjectByIdentifier(String projectId, String username);
 	
-	ProjectDTO updateProject(ProjectDTO project);
+	ProjectDTO updateProject(ProjectDTO project, String username);
 }

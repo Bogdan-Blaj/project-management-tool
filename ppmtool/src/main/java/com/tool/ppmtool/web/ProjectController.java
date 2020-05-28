@@ -1,5 +1,6 @@
 package com.tool.ppmtool.web;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +50,7 @@ public class ProjectController {
 	
 	
 	@PostMapping
-	public ResponseEntity<?> createNewProject(@Valid @RequestBody ProjectRequest project, BindingResult result){
+	public ResponseEntity<?> createNewProject(@Valid @RequestBody ProjectRequest project, BindingResult result, Principal principal){
 		
 		ResponseEntity<?> errorMap = validationService.checkValid(result);
 		if(errorMap != null) 
@@ -60,7 +61,7 @@ public class ProjectController {
 		
 		BeanUtils.copyProperties(project, projectDTO);
 		
-		createdProject = projectService.saveOrUpdateProject(projectDTO);
+		createdProject = projectService.saveOrUpdateProject(projectDTO, principal.getName());
 		
 		ProjectResponse returnValue = new ProjectResponse();
 		
@@ -72,9 +73,9 @@ public class ProjectController {
 	
 	
 	@GetMapping("/{projectId}")
-	public ResponseEntity<?> getProjectbyId(@PathVariable String projectId){
+	public ResponseEntity<?> getProjectbyId(@PathVariable String projectId, Principal principal){
 		
-		ProjectDTO projectDTO = projectService.findProjectByIdentifier(projectId);
+		ProjectDTO projectDTO = projectService.findProjectByIdentifier(projectId, principal.getName());
 		ProjectResponse returnValue = new ProjectResponse();
 		
 		BeanUtils.copyProperties(projectDTO, returnValue);
@@ -83,8 +84,8 @@ public class ProjectController {
 	}
 	
 	@GetMapping("/all")
-	public Iterable<ProjectResponse> getAllProjects(){
-		List<ProjectDTO> storedProjects = projectService.findAllProjects();
+	public Iterable<ProjectResponse> getAllProjects(Principal principal){
+		List<ProjectDTO> storedProjects = projectService.findAllProjects(principal.getName());
 		List<ProjectResponse> returnValue = new ArrayList<>();
 		java.lang.reflect.Type listType = new TypeToken<List<ProjectResponse>>() {}.getType();
 		ModelMapper modelMapper = new ModelMapper();
@@ -94,8 +95,8 @@ public class ProjectController {
 	}
 	
 	@DeleteMapping("/{projectId}")
-	public ResponseEntity<?> deleteProject(@PathVariable String projectId){
-		projectService.deleteProjectByIdentifier(projectId);
+	public ResponseEntity<?> deleteProject(@PathVariable String projectId, Principal principal){
+		projectService.deleteProjectByIdentifier(projectId, principal.getName());
 		
 		return new ResponseEntity<String>("Project with ID: '" + projectId + "' was deleted", HttpStatus.OK);
 	}
@@ -103,7 +104,7 @@ public class ProjectController {
 	
 	
 	@PutMapping
-	public ResponseEntity<?> updateProject(@Valid @RequestBody ProjectRequest project, BindingResult result){
+	public ResponseEntity<?> updateProject(@Valid @RequestBody ProjectRequest project,Principal principal, BindingResult result){
 		
 		ResponseEntity<?> errorMap = validationService.checkValid(result);
 		if(errorMap != null) 
@@ -112,7 +113,7 @@ public class ProjectController {
 		ProjectDTO projectDTO = new ProjectDTO();
 		BeanUtils.copyProperties(project, projectDTO);
 		
-		ProjectDTO updatedProject = projectService.updateProject(projectDTO);
+		ProjectDTO updatedProject = projectService.updateProject(projectDTO, principal.getName());
 		ProjectResponse returnValue = new ProjectResponse();
 		BeanUtils.copyProperties(updatedProject, returnValue);
 		

@@ -32,6 +32,10 @@ public class ProjectResponse {
 	@JsonFormat(pattern = "MM-dd-yyyy")
 	private Date updated_At;
 	
+	private String projectLeader;
+	
+	
+	
 //	private Backlog backlog;
 	
 	
@@ -43,6 +47,14 @@ public class ProjectResponse {
 //	public void setBacklog(Backlog backlog) {
 //		this.backlog = backlog;
 //	}
+
+	public String getProjectLeader() {
+		return projectLeader;
+	}
+
+	public void setProjectLeader(String projectLeader) {
+		this.projectLeader = projectLeader;
+	}
 
 	public Long getId() {
 		return id;
