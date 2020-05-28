@@ -4,13 +4,13 @@ import com.tool.ppmtool.domain.ProjectTask;
 
 public interface ProjectTaskService {
 
-	ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask);
+	ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask, String username);
 
-	Iterable<ProjectTask> findBacklogById(String backlog_id);
+	Iterable<ProjectTask> findBacklogById(String backlog_id, String username);
 	
-	ProjectTask findPTByProjectSequence(String backlog_id, String sequence);
+	ProjectTask findPTByProjectSequence(String backlog_id, String sequence, String username);
 	
-	ProjectTask updateProjectTask(String backlog_id, String projectSequence, ProjectTask projectTask);
+	ProjectTask updateProjectTask(String backlog_id, String projectSequence, ProjectTask projectTask, String username);
 	
-	void deleteProjectTask(String backlog_id, String sequence);
+	void deleteProjectTask(String backlog_id, String sequence, String username);
 }

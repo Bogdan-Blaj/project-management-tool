@@ -2,6 +2,7 @@ package com.tool.ppmtool.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +11,12 @@ import com.tool.ppmtool.domain.Project;
 import com.tool.ppmtool.domain.ProjectTask;
 import com.tool.ppmtool.exception.backlog.BacklogIdentifierException;
 import com.tool.ppmtool.exception.project.ProjectIdException;
+import com.tool.ppmtool.model.response.ProjectResponse;
 import com.tool.ppmtool.repository.BacklogRepository;
 import com.tool.ppmtool.repository.ProjectRepository;
 import com.tool.ppmtool.repository.ProjectTaskRepository;
 import com.tool.ppmtool.service.ProjectTaskService;
+import com.tool.ppmtool.shared.dto.ProjectDTO;
 
 @Service
 public class ProjectTaskServiceImpl implements ProjectTaskService {
@@ -26,16 +29,23 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
 
 	@Autowired
 	ProjectRepository projectRepository;
+	
+	@Autowired
+	private ProjectServiceImpl projectService;
 
 	@Override
-	public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask) {
+	public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask, String username) {
 		// PT to be added to a specific project => backlog exists
 
-		Backlog backlog = backlogRepository.findByProjectIdentifier(projectIdentifier);
+		//use existing method to look for the project and extract the backlog from the received project
+		ProjectDTO projectDTO = projectService.findProjectByIdentifier(projectIdentifier, username);
+		
+		Project project = new Project();
+		//copy properties from projectDTO to project type
+		BeanUtils.copyProperties(projectDTO, project);
+		
+		Backlog backlog = project.getBacklog();
 
-		// check if we have backlog and throw exception
-		if (backlog == null)
-			throw new BacklogIdentifierException("Project not found");
 
 		// set the backlog to the project task
 		projectTask.setBacklog(backlog);
@@ -68,23 +78,21 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
 	}
 
 	@Override
-	public Iterable<ProjectTask> findBacklogById(String backlog_id) {
+	public Iterable<ProjectTask> findBacklogById(String backlog_id, String username) {
 
-		Project project = projectRepository.findByProjectIdentifier(backlog_id);
-
-		if (project == null)
-			throw new BacklogIdentifierException("Project with ID: '" + backlog_id + "' not found");
+		//search for the project
+		projectService.findProjectByIdentifier(backlog_id, username);
+		
+		//if the project exists, it has backlog
 		return projectTaskRepository.findByProjectIdentifierOrderByPriority(backlog_id);
 
 	}
 
 	@Override
-	public ProjectTask findPTByProjectSequence(String backlog_id, String sequence) {
+	public ProjectTask findPTByProjectSequence(String backlog_id, String sequence, String username) {
 
 		// check we are searching in an existing backlog
-		Backlog backlog = backlogRepository.findByProjectIdentifier(backlog_id);
-		if (backlog == null)
-			throw new BacklogIdentifierException("Project with ID: '" + backlog_id + "' not found");
+		projectService.findProjectByIdentifier(backlog_id, username);
 
 		// check that the task exists
 		ProjectTask projectTask = projectTaskRepository.findByProjectSequence(sequence);
@@ -92,18 +100,19 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
 			throw new BacklogIdentifierException("Project Task with ID: '" + sequence + "' not found");
 
 		// check that the received id's corresponds to the right project
-		if (!projectTask.getBacklog().getProjectIdentifier().equals(backlog_id))
+		if (!projectTask.getBacklog().getProjectIdentifier().equals(backlog_id.toUpperCase()))
 			throw new BacklogIdentifierException(
 					"Project Task with ID: '" + sequence + "' does not exist in project: " + backlog_id);
 
 		return projectTask;
 	}
+	
 
 	@Override
-	public ProjectTask updateProjectTask(String backlog_id, String projectSequence, ProjectTask projectTask) {
+	public ProjectTask updateProjectTask(String backlog_id, String projectSequence, ProjectTask projectTask, String username) {
 
 		// check that the task exists
-		ProjectTask savedProjectTask = findPTByProjectSequence(backlog_id,projectSequence);
+		ProjectTask savedProjectTask = findPTByProjectSequence(backlog_id,projectSequence, username);
 		
 		// if valid priority is received, change it
 		if (projectTask.getPriority() != null && projectTask.getPriority() != 0) {
@@ -124,10 +133,10 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
 	}
 
 	@Override
-	public void deleteProjectTask(String backlog_id, String sequence) {
+	public void deleteProjectTask(String backlog_id, String sequence, String username) {
 
-		// check that the task exists
-		ProjectTask storedProjectTask = findPTByProjectSequence(backlog_id,sequence);
+//		 check that the task exists
+		ProjectTask storedProjectTask = findPTByProjectSequence(backlog_id,sequence, username);
 		projectTaskRepository.delete(storedProjectTask);
 	}
 

@@ -5,16 +5,16 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tool.ppmtool.domain.Backlog;
+import com.tool.ppmtool.domain.User;
 
-
-public class ProjectDTO implements Serializable{
+public class ProjectDTO implements Serializable {
 
 	private static final long serialVersionUID = 3002571915943902898L;
 	private Long id;
-	
+
 	private String projectName;
-	
-	private String projectIdentifier; //custom identifier for custom project
+
+	private String projectIdentifier; // custom identifier for custom project
 
 	private String description;
 
@@ -23,16 +23,36 @@ public class ProjectDTO implements Serializable{
 
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	private Date end_date;
-	
+
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	private Date created_At;
 
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	private Date updated_At;
-	
+
 	private Backlog backlog;
+
+	private User user;
+
+	private String projectLeader;
 	
 	
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public String getProjectLeader() {
+		return projectLeader;
+	}
+
+	public void setProjectLeader(String projectLeader) {
+		this.projectLeader = projectLeader;
+	}
 
 	public Backlog getBacklog() {
 		return backlog;
@@ -105,7 +125,5 @@ public class ProjectDTO implements Serializable{
 	public void setUpdated_At(Date updated_At) {
 		this.updated_At = updated_At;
 	}
-	
-	
 
 }

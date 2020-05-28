@@ -12,6 +12,8 @@ import com.tool.ppmtool.exception.backlog.BacklogIdentifierException;
 import com.tool.ppmtool.exception.backlog.BacklogIdentifierExceptionResponse;
 import com.tool.ppmtool.exception.project.ProjectIdException;
 import com.tool.ppmtool.exception.project.ProjectIdExceptionResponse;
+import com.tool.ppmtool.exception.user.UsernameAlreadyExistsException;
+import com.tool.ppmtool.exception.user.UsernameAlreadyExistsExceptionResponse;
 
 @ControllerAdvice
 @RestController
@@ -29,6 +31,14 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 	public final ResponseEntity<Object> handleBacklogIdentifierException(BacklogIdentifierException ex, WebRequest request){
 		
 		BacklogIdentifierExceptionResponse exceptionResponse = new BacklogIdentifierExceptionResponse(ex.getMessage());
+		
+		return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler
+	public final ResponseEntity<Object> handleUsernameAlreadyExists(UsernameAlreadyExistsException ex, WebRequest request){
+		
+		UsernameAlreadyExistsExceptionResponse exceptionResponse = new UsernameAlreadyExistsExceptionResponse(ex.getMessage());
 		
 		return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
 	}
