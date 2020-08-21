@@ -10,7 +10,7 @@ import axios from "axios";
 
       type: GET_ERRORS,
       payload: {}
-    })
+    });
   } catch (err) {
 
     dispatch({

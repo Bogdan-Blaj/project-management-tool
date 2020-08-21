@@ -42,6 +42,15 @@ class ProjectBoard extends Component {
                     </div>
                 );
             }
+            else
+            if(errors.projectIdentifier){
+                return (
+                    <div className="alert alert-danger text-center" role = "alert">
+                    {errors.projectIdentifier}
+                    </div>
+                );
+            }
+
             else {
                 return (
                     <div className="alert alert-info text-center">
@@ -58,9 +67,21 @@ class ProjectBoard extends Component {
 
         return (
             <div className="container">
-            <Link to={`/addProjectTask/${id}`} className="btn btn-primary mb-3">
-                <i className="fas fa-plus-circle"> Create Project Task</i>
-            </Link>
+                <div className="row">
+                    <div className="col-auto mr-auto">
+                        <Link to={`/addProjectTask/${id}`} className="btn btn-primary mb-3">
+                        <i className="fas fa-plus-circle"> Create Project Task</i>
+                        </Link>
+                    </div>
+
+                    <div className="col-auto"> 
+                        <Link to={`/backlogView/${id}`} className="btn btn-primary mb-3">
+                        <i className="fas fa-plus-circle"> Backlog View</i>
+                        </Link> 
+                    </div>
+                </div>
+
+                   
             <br />
             <hr />
             {BoardContent}

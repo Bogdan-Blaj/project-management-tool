@@ -50,7 +50,6 @@ class UpdateProjectTask extends Component {
             projectIdentifier: this.state.projectIdentifier
         };
         
-        console.log(updatedProjectTask);
 
         this.props.updateProjectTask(this.state.projectIdentifier, this.state.projectSequence, updatedProjectTask, this.props.history);
     }

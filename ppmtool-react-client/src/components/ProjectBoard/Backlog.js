@@ -27,7 +27,6 @@ class Backlog extends Component {
                     doneItems.push(tasks[i]);
                 break;
             }
-            console.log(tasks[i].props.project_task.status);
         }
         return (
                 <div className="container">

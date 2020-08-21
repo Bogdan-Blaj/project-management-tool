@@ -5,3 +5,4 @@
 */target/
 .metadata/
 .project
+.DS_Store
